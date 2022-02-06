@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+const devRouter = require('./routes/dev');
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URL, () => {
@@ -20,9 +22,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('combined'));
 
-app.get('/', (req, res) => {
-  res.json({ message: 'Olá Dev'});
-});
+app.use('/api/v1/dev', devRouter);
 
 app.listen(8800, () => {
   console.log('-------------------')
