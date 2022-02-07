@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan('combined'));
 
-app.use('/api/v1/dev', devRouter);
+app.use('/api/v1/devs', devRouter);
 
 app.listen(8800, () => {
   console.log('-------------------')

@@ -23,7 +23,7 @@ const DevSchema = new mongoose.Schema({
     enum: ['frontend', 'backend', 'fullstack'],
     require: true
   },
-  levels: {
+  level: {
     type: String,
     require: true,
     enum: ['junior', 'middle', 'senior'],
