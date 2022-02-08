@@ -69,4 +69,17 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+
+    const searchAllDev = await Dev.find();
+
+    return res.status(200).json(searchAllDev);
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error});
+  }
+});
+
 module.exports = router;
