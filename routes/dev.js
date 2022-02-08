@@ -82,4 +82,35 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.put('/:id', async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const devExists = await Dev.exists({ _id: id });
+
+    if(!devExists){
+      return res.status(400).json({ message: 'Dev não encontrado'});
+    }
+
+    const dev = await Dev.findOne({ _id: id });
+
+    if(req.body.email && dev.email != req.body.email){
+      const existsEmail = await Dev.exists({ email: req.body.email });
+
+      if(existsEmail){
+        return res.status(400).json({ message: 'E-mail indisponível'});
+      }
+    }
+
+    await Dev.updateOne({ $set: req.body });
+
+    return res.status(200).json({ message: 'Dev atualizado com sucesso!'});
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error});
+  }
+});
+
 module.exports = router;
