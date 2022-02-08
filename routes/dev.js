@@ -113,4 +113,25 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const devExists = await Dev.exists({ _id: id });
+
+    if(!devExists){
+      return res.status(400).json({ message: 'Dev não encontrado'});
+    }
+
+    await Dev.deleteOne({ _id: id });
+
+    return res.status(200).json({ message: 'Dev removido com sucesso!'});
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error});
+  }
+});
+
 module.exports = router;
