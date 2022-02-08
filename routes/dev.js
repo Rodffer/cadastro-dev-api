@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Dev = require('../models/Dev');
+const yup = require('yup');
+
 /*
 
   POST: Criar
@@ -27,6 +29,26 @@ router.post('/', async (req, res) => {
 
     const { firstName, lastName, email, role, level, stacks, description } = req.body;
 
+    let schema = yup.object().shape({
+      firstName: yup.string().required(),
+      lastName: yup.string().required(),
+      email: yup.string().email().required(),
+      role: yup.string().required(),
+      level: yup.string().required(),
+      stacks: yup.array().required(),
+      description: yup.string().required()
+    });
+
+    if(!(await schema.isValid(req.body))){
+      return res.status(400).json({ message: 'Erro de validação'});
+    }
+
+    const existsEmail = await Dev.exists({ email });
+
+    if(existsEmail){
+      return res.status(400).json({ message: 'E-mail indisponível'});
+    }
+
     const dev = await new Dev({
       firstName,
       lastName,
@@ -42,6 +64,7 @@ router.post('/', async (req, res) => {
     return res.status(201).json(dev);
     
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: error});
   }
 });
